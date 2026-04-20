@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CrowdSense AI — VenueIQ</title><link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../venue-extra.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head><body>
+<nav class="navbar" id="navbar"><div class="nav-logo">⚡ VenueIQ</div><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/#features">Features</a></li></ul><a href="/" class="nav-cta">← Back</a></nav>
+<section style="padding-top:6rem;max-width:1000px;margin:0 auto">
+<div class="section-header"><span class="tag">CrowdSense AI</span><h2>Live Density Monitor</h2><p>Real-time crowd density analysis across all venue zones.</p></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:0 2rem">
+<div class="detail-card" style="grid-column:span 2"><h3>🗺️ Live Heatmap <span class="sim-chip">SIMULATED</span></h3><div id="heatmap"></div></div>
+<div class="detail-card"><h3>📊 Zone Density Table</h3><div id="zone-table"></div></div>
+<div class="detail-card"><h3>📡 Sensor Status</h3><div id="sensor-status"></div></div>
+<div class="detail-card" style="grid-column:span 2"><h3>📈 Anomaly Feed — Last 10 Readings</h3><div id="anomaly-feed"></div></div>
+<div class="detail-card" style="grid-column:span 2"><h3>🔧 How It Works</h3>
+<details style="margin:.5rem 0"><summary style="cursor:pointer;color:var(--accent-glow);font-size:.9rem">Edge Inference</summary><p style="font-size:.85rem;color:var(--text-secondary);margin:.5rem 0">Runs on NVIDIA Jetson Orin modules at each venue gate, processing video feeds at 30fps with YOLOv8 for anonymized person counting.</p></details>
+<details style="margin:.5rem 0"><summary style="cursor:pointer;color:var(--accent-glow);font-size:.9rem">Privacy First</summary><p style="font-size:.85rem;color:var(--text-secondary);margin:.5rem 0">Anonymised count only — no biometric data, no facial recognition. All processing happens on-device; only aggregate counts leave the edge node.</p></details>
+<details style="margin:.5rem 0"><summary style="cursor:pointer;color:var(--accent-glow);font-size:.9rem">Refresh Rate</summary><p style="font-size:.85rem;color:var(--text-secondary);margin:.5rem 0">500ms sensor read interval with 10-second aggregation windows pushed to the central dashboard via WebSocket.</p></details>
+</div></div></section>
+<footer class="footer"><p>© 2026 VenueIQ. Real-time sports venue intelligence.</p></footer>
+<script>
+const API=window.location.origin;
+const SVG=`<svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg"><ellipse cx="300" cy="250" rx="280" ry="220" fill="#1a1f2e" stroke="#2d3348" stroke-width="2"/><ellipse cx="300" cy="250" rx="120" ry="95" fill="#2d5016" stroke="#4a7a2a" stroke-width="1"/><rect x="288" y="205" width="24" height="90" rx="2" fill="#8B7355" opacity="0.9"/><path id="zone-north" d="M 120,60 Q 300,20 480,60 Q 440,140 300,155 Q 160,140 120,60 Z" fill="#1e4a2e" stroke="#00E5C7" stroke-width="1.5" class="venue-zone"/><path id="zone-south" d="M 120,440 Q 300,480 480,440 Q 440,360 300,345 Q 160,360 120,440 Z" fill="#1e4a2e" stroke="#00E5C7" stroke-width="1.5" class="venue-zone"/><path id="zone-east" d="M 500,90 Q 570,250 500,410 Q 430,370 420,250 Q 430,130 500,90 Z" fill="#1e4a2e" stroke="#00E5C7" stroke-width="1.5" class="venue-zone"/><path id="zone-west" d="M 100,90 Q 30,250 100,410 Q 170,370 180,250 Q 170,130 100,90 Z" fill="#1e4a2e" stroke="#00E5C7" stroke-width="1.5" class="venue-zone"/><text x="300" y="90" text-anchor="middle" font-size="11" fill="#00E5C7" font-family="monospace">ADANI PAVILION</text><text x="300" y="425" text-anchor="middle" font-size="11" fill="#00E5C7" font-family="monospace">RELIANCE STAND</text><text x="520" y="255" text-anchor="middle" font-size="10" fill="#00E5C7" font-family="monospace" transform="rotate(90,520,255)">BCCI STAND</text><text x="80" y="255" text-anchor="middle" font-size="10" fill="#00E5C7" font-family="monospace" transform="rotate(-90,80,255)">PAVILION END</text></svg>`;
+document.getElementById('heatmap').innerHTML=SVG;
+const readings=[];
+async function refresh(){
+  try{const r=await fetch(API+'/api/v1/venues/current/crowdsense');const d=await r.json();
+  d.zones.forEach(z=>{const el=document.getElementById('zone-'+z.zoneId);if(el)el.style.fill=z.fillPct>88?'rgba(255,68,68,.25)':z.fillPct>65?'rgba(255,184,0,.2)':'rgba(34,197,94,.15)';});
+  let t='';d.zones.forEach(z=>{const c=z.fillPct>88?'#FF4444':z.fillPct>65?'#FFB800':'#22c55e';t+=`<div class="zone-row"><span>${z.name}</span><span style="font-weight:600;color:${c}">${z.fillPct}%</span><span>${z.personCount.toLocaleString()} / ${z.capacity.toLocaleString()}</span><span style="color:${c}">${z.status}</span><span>${z.trend}</span></div>`;});
+  document.getElementById('zone-table').innerHTML=t;
+  readings.unshift({time:new Date().toLocaleTimeString(),zones:d.zones.map(z=>({name:z.name,pct:z.fillPct}))});
+  if(readings.length>10)readings.pop();
+  let af='';readings.forEach(r=>{af+=`<div style="display:flex;gap:1rem;padding:.3rem 0;font-size:.8rem;border-bottom:1px solid var(--border)"><span style="color:var(--text-muted);min-width:70px">${r.time}</span>${r.zones.map(z=>`<span>${z.name}: ${z.pct}%</span>`).join('')}</div>`;});
+  document.getElementById('anomaly-feed').innerHTML=af;
+  }catch{}}
+document.getElementById('sensor-status').innerHTML=`<div class="info-row"><span class="info-label">North Cameras</span><span class="info-value" style="color:#55efc4">● Active (3/3)</span></div><div class="info-row"><span class="info-label">South Cameras</span><span class="info-value" style="color:#55efc4">● Active (3/3)</span></div><div class="info-row"><span class="info-label">East Cameras</span><span class="info-value" style="color:#FFB800">● Partial (2/3)</span></div><div class="info-row"><span class="info-label">West Cameras</span><span class="info-value" style="color:#55efc4">● Active (3/3)</span></div><div class="info-row"><span class="info-label">IoT Counters</span><span class="info-value" style="color:var(--text-muted)">○ Not Deployed</span></div>`;
+refresh();setInterval(refresh,10000);
+</script></body></html>

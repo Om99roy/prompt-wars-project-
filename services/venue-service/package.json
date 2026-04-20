@@ -1,0 +1,14 @@
+{
+  "name": "venue-service",
+  "version": "1.0.0",
+  "description": "Venue Config Service",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "pg": "^8.20.0"
+  }
+}

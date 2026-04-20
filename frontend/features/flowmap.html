@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>FlowMap Navigation — VenueIQ</title><link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../venue-extra.css"></head><body>
+<nav class="navbar" id="navbar"><div class="nav-logo">⚡ VenueIQ</div><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/#features">Features</a></li></ul><a href="/" class="nav-cta">← Back</a></nav>
+<section style="padding-top:6rem;max-width:1000px;margin:0 auto">
+<div class="section-header"><span class="tag">FlowMap Navigation</span><h2>Indoor Wayfinding</h2><p>Simulate routes and navigate complex stadium environments.</p></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:0 2rem">
+<div class="detail-card" style="grid-column:span 2"><h3>🗺️ Route Simulation</h3><div style="display:flex;gap:1rem;margin:1rem 0;align-items:center">
+<select id="start" style="padding:.5rem;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;width:200px"><option>Gate 7 (North)</option><option>Gate 1 (South)</option></select>
+<span style="color:var(--text-secondary)">→</span>
+<select id="end" style="padding:.5rem;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;width:200px"><option>Adani Pavilion (Sec A)</option><option>Concession C2</option></select>
+<button onclick="simulate()" class="btn-primary" style="padding:.5rem 1rem">Simulate</button></div>
+<div id="route-map" style="position:relative;background:linear-gradient(135deg,rgba(108,92,231,.1),rgba(0,206,201,.05));border:1px solid var(--border);border-radius:8px;height:250px;display:flex;align-items:center;justify-content:center">
+<div id="route-svg" style="width:100%;height:100%"><svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%"><ellipse cx="300" cy="250" rx="280" ry="220" fill="#1a1f2e" stroke="#2d3348" stroke-width="2"/><ellipse cx="300" cy="250" rx="120" ry="95" fill="#2d5016" stroke="#4a7a2a" stroke-width="1"/><path id="anim-path" d="M 280,30 Q 300,100 240,115" fill="none" stroke="#00E5C7" stroke-width="4" stroke-dasharray="10" opacity="0"/></svg></div>
+</div><div id="route-info" style="margin-top:1rem;font-size:.9rem;display:none;color:var(--accent-glow)">Estimated Walk Time: <span style="font-weight:700">3 min</span> <span style="color:#FFB800;margin-left:1rem">⚠ Slight congestion near C2</span></div></div>
+<div class="detail-card"><h3>♿ Accessibility</h3><div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid var(--border)"><span>Wheelchair Accessible Routes</span><label style="position:relative;display:inline-block;width:40px;height:24px"><input type="checkbox" checked style="opacity:0;width:0;height:0"><span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--accent);border-radius:24px;transition:.4s"></span><span style="position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background-color:white;border-radius:50%;transition:.4s;transform:translateX(16px)"></span></label></div><p style="font-size:.8rem;color:var(--text-secondary);margin-top:1rem">When enabled, routing strictly uses ramps and elevators, avoiding stairs.</p></div>
+<div class="detail-card"><h3>📱 Scan to Navigate</h3><div style="display:flex;align-items:center;gap:1.5rem;margin-top:1rem"><div style="width:100px;height:100px;background:#fff;padding:.5rem;border-radius:8px"><img src="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect width='100' height='100' fill='white'/><rect x='10' y='10' width='25' height='25' fill='black'/><rect x='65' y='10' width='25' height='25' fill='black'/><rect x='10' y='65' width='25' height='25' fill='black'/><rect x='45' y='45' width='10' height='10' fill='black'/></svg>" width="100%" height="100%"></div><div><div style="font-size:.9rem;font-weight:600">Send to phone</div><div style="font-size:.8rem;color:var(--text-secondary)">Scan this QR code to continue indoor navigation on your mobile device.</div></div></div></div>
+<div class="detail-card" style="grid-column:span 2"><h3>🌐 Localisation</h3><div style="display:flex;gap:1rem;margin-top:1rem"><button class="btn-secondary" style="background:var(--accent);color:#fff">English</button><button class="btn-secondary">Hindi (हिंदी)</button><button class="btn-secondary">Gujarati (ગુજરાતી)</button></div><p style="font-size:.85rem;color:var(--text-muted);margin-top:1rem">Audio navigation and on-screen text available in multiple languages.</p></div>
+</div></section>
+<footer class="footer"><p>© 2026 VenueIQ.</p></footer>
+<script>
+function simulate(){
+const p=document.getElementById('anim-path');
+p.style.opacity=0;
+setTimeout(()=>{
+p.style.opacity=1;
+p.style.animation='dash 2s linear infinite';
+const style=document.createElement('style');
+style.innerHTML='@keyframes dash { to { stroke-dashoffset: -20; } }';
+document.head.appendChild(style);
+document.getElementById('route-info').style.display='block';
+},100);
+}
+</script></body></html>

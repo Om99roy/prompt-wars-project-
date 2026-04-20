@@ -1,0 +1,101 @@
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: timescaledb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: venue_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+      - ./db/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - venue_network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - venue_network
+    restart: unless-stopped
+
+  kafka:
+    image: apache/kafka:latest
+    container_name: kafka
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      CLUSTER_ID: MkU3OEVBNT-QRVj0cO04p0Q
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - venue_network
+    restart: unless-stopped
+
+  kong:
+    image: kong:latest
+    container_name: kong
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/usr/local/kong/declarative/kong.yml
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "8444:8444"
+    volumes:
+      - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml
+    networks:
+      - venue_network
+    restart: unless-stopped
+
+  auth-service:
+    build:
+      context: ./services/auth-service
+    container_name: auth-service
+    ports:
+      - "8080:8080"
+    networks:
+      - venue_network
+    restart: unless-stopped
+
+  venue-service:
+    build:
+      context: ./services/venue-service
+    container_name: venue-service
+    ports:
+      - "3000:3000"
+    networks:
+      - venue_network
+    restart: unless-stopped
+
+networks:
+  venue_network:
+    driver: bridge
+
+volumes:
+  timescaledb_data:
+  redis_data:
+  kafka_data:

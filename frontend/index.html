@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VenueIQ — The AI-powered real-time sports venue attendee experience platform. Crowd intelligence, smart queuing, and live navigation for stadiums worldwide.">
+  <title>VenueIQ — Real-Time Sports Venue Intelligence</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<!-- ── NAVBAR ──────────────────────────── -->
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">⚡ VenueIQ</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#sports">Sports</a></li>
+    <li><a href="#cta">Contact</a></li>
+  </ul>
+  <a href="#cta" class="nav-cta">Get Early Access</a>
+</nav>
+
+<!-- ── HERO ────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> Now in Development</div>
+    <h1>The Future of <span class="gradient">Stadium Intelligence</span></h1>
+    <p>AI-powered crowd analytics, real-time queue optimization, and smart navigation — transforming how 100,000+ fans experience live sports.</p>
+    <div class="hero-buttons">
+      <a href="#features" class="btn-primary">Explore Features</a>
+      <a href="#architecture" class="btn-secondary">View Architecture →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ───────────────────────────── -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-number" id="stat-venues">0</div>
+    <div class="stat-label">Venues Supported</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number" id="stat-latency">&lt;0ms</div>
+    <div class="stat-label">Avg. Latency</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number" id="stat-accuracy">0%</div>
+    <div class="stat-label">Crowd Prediction</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number" id="stat-regions">0</div>
+    <div class="stat-label">Data Regions</div>
+  </div>
+</div>
+
+<!-- ── FEATURES ────────────────────────── -->
+<section id="features">
+  <div class="section-header fade-in">
+    <span class="tag">Core Modules</span>
+    <h2>Intelligence at Every Touchpoint</h2>
+    <p>Six purpose-built AI modules working in real-time harmony to create the ultimate attendee experience.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card fade-in" onclick="location.href='/features/crowdsense.html'" style="cursor:pointer" role="button" tabindex="0" aria-label="Open CrowdSense AI feature page">
+      <div class="feature-icon purple">👁️</div>
+      <h3>CrowdSense AI</h3>
+      <p>Real-time crowd density heatmaps using computer vision and IoT sensors. Predict congestion 15 minutes before it happens.</p>
+      <div style="margin-top:1rem;font-size:.8rem;color:var(--accent-glow)">Explore module →</div>
+    </div>
+    <div class="feature-card fade-in" onclick="location.href='/features/queueliq.html'" style="cursor:pointer" role="button" tabindex="0" aria-label="Open QueueIQ feature page">
+      <div class="feature-icon teal">⏱️</div>
+      <h3>QueueIQ</h3>
+      <p>Intelligent queue management with live wait-time predictions. Dynamically redistribute attendees across concession stands.</p>
+      <div style="margin-top:1rem;font-size:.8rem;color:var(--accent-glow)">Explore module →</div>
+    </div>
+    <div class="feature-card fade-in" onclick="location.href='/features/flowmap.html'" style="cursor:pointer" role="button" tabindex="0" aria-label="Open FlowMap Navigation feature page">
+      <div class="feature-icon pink">🗺️</div>
+      <h3>FlowMap Navigation</h3>
+      <p>Indoor-outdoor wayfinding with AR overlays and accessibility-first routing through complex stadium environments.</p>
+      <div style="margin-top:1rem;font-size:.8rem;color:var(--accent-glow)">Explore module →</div>
+    </div>
+    <div class="feature-card fade-in" onclick="location.href='/features/safezone.html'" style="cursor:pointer" role="button" tabindex="0" aria-label="Open SafeZone Alerts feature page">
+      <div class="feature-icon blue">🛡️</div>
+      <h3>SafeZone Alerts</h3>
+      <p>Automated incident detection and emergency evacuation route optimization using real-time crowd flow analysis.</p>
+      <div style="margin-top:1rem;font-size:.8rem;color:var(--accent-glow)">Explore module →</div>
+    </div>
+    <div class="feature-card fade-in" onclick="location.href='/features/analytics.html'" style="cursor:pointer" role="button" tabindex="0" aria-label="Open Venue Analytics feature page">
+      <div class="feature-icon orange">📊</div>
+      <h3>Venue Analytics</h3>
+      <p>Post-event insights dashboard with revenue attribution, crowd behavior patterns, and operational KPI tracking.</p>
+      <div style="margin-top:1rem;font-size:.8rem;color:var(--accent-glow)">Explore module →</div>
+    </div>
+    <div class="feature-card fade-in" onclick="location.href='/features/multi-venue.html'" style="cursor:pointer" role="button" tabindex="0" aria-label="Open Multi-Venue Control feature page">
+      <div class="feature-icon green">🏟️</div>
+      <h3>Multi-Venue Control</h3>
+      <p>Centralized management for tournament-wide operations spanning stadiums across India, UK, Poland, and Pakistan.</p>
+      <div style="margin-top:1rem;font-size:.8rem;color:var(--accent-glow)">Explore module →</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ARCHITECTURE ────────────────────── -->
+<section id="architecture">
+  <div class="section-header fade-in">
+    <span class="tag">System Design</span>
+    <h2>Built for Scale</h2>
+    <p>A microservices architecture engineered to handle 100K+ concurrent users with sub-200ms latency.</p>
+  </div>
+  <div class="arch-container fade-in">
+    <div class="arch-layers">
+      <div class="arch-layer">
+        <div class="layer-dot" style="background:var(--accent-glow)"></div>
+        <span class="layer-name">🌐 API Gateway</span>
+        <span class="layer-tech">Kong → Rate limiting, JWT auth, traffic routing</span>
+      </div>
+      <div class="arch-layer">
+        <div class="layer-dot" style="background:var(--accent-2)"></div>
+        <span class="layer-name">⚙️ Microservices</span>
+        <span class="layer-tech">Go (Auth) · Node.js (Venue) · Python/FastAPI (AI)</span>
+      </div>
+      <div class="arch-layer">
+        <div class="layer-dot" style="background:var(--accent-3)"></div>
+        <span class="layer-name">📡 Event Stream</span>
+        <span class="layer-tech">Apache Kafka → Real-time sensor data processing</span>
+      </div>
+      <div class="arch-layer">
+        <div class="layer-dot" style="background:#fdcb6e"></div>
+        <span class="layer-name">🗄️ Data Layer</span>
+        <span class="layer-tech">PostgreSQL · TimescaleDB · Redis Cache</span>
+      </div>
+      <div class="arch-layer">
+        <div class="layer-dot" style="background:#55efc4"></div>
+        <span class="layer-name">🤖 Edge Computing</span>
+        <span class="layer-tech">NVIDIA Jetson Orin → On-premise CV inference</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LIVE DASHBOARD ──────────────────── -->
+<section id="dashboard">
+  <div class="section-header fade-in">
+    <span class="tag">Live Status</span>
+    <h2>System Dashboard</h2>
+    <p>Real-time health monitoring of all platform microservices.</p>
+  </div>
+  <div class="features-grid" style="max-width:900px; margin:0 auto;">
+    <div class="feature-card fade-in">
+      <div class="feature-icon purple">🌐</div>
+      <h3>API Gateway</h3>
+      <p>Port 8000 — Traffic routing & rate limiting</p>
+      <div class="service-status" id="status-gateway">● Checking...</div>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon teal">🔐</div>
+      <h3>Auth Service</h3>
+      <p>Port 8080 — JWT authentication (Go)</p>
+      <div class="service-status" id="status-auth">● Checking...</div>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon pink">🏟️</div>
+      <h3>Venue Service</h3>
+      <p>Port 3000 — Venue configuration (Node.js)</p>
+      <div class="service-status" id="status-venue">● Checking...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LIVE VENUE DATA ─────────────────── -->
+<section id="sports">
+  <div class="section-header fade-in">
+    <span class="tag">Live API Data</span>
+    <h2>Connected Venues</h2>
+    <p>Real-time venue data fetched from the Venue API.</p>
+  </div>
+  <div id="live-venues" class="features-grid fade-in" style="max-width:900px; margin:0 auto;">
+    <p style="color:var(--text-muted); text-align:center;">Loading venues from API...</p>
+  </div>
+</section>
+
+
+<section class="cta-section" id="cta">
+  <div class="cta-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+  <div class="cta-content fade-in">
+    <h2>Ready to Transform Your Venue?</h2>
+    <p>Join the next generation of sports venue intelligence. Get early access to VenueIQ today.</p>
+    <a href="mailto:hello@venueiq.dev" class="btn-primary">Request a Demo</a>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────── -->
+<footer class="footer">
+  <p>© 2026 VenueIQ. Built with ❤️ for the future of live sports.</p>
+  <div class="footer-links">
+    <a href="#">Documentation</a>
+    <a href="#">GitHub</a>
+    <a href="#">Privacy</a>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

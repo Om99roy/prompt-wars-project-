@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>QueueIQ — VenueIQ</title><link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../venue-extra.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head><body>
+<nav class="navbar" id="navbar"><div class="nav-logo">⚡ VenueIQ</div><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/#features">Features</a></li></ul><a href="/" class="nav-cta">← Back</a></nav>
+<section style="padding-top:6rem;max-width:1000px;margin:0 auto">
+<div class="section-header"><span class="tag">QueueIQ</span><h2>Predictive Queue Intelligence</h2><p>Live wait times and smart redistribution across all concession points.</p></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:0 2rem">
+<div class="detail-card" style="grid-column:span 2"><h3>⏱ Live Queue Dashboard <span class="sim-chip">SIMULATED</span></h3><div id="queue-dash"></div></div>
+<div class="detail-card"><h3>📊 Queue Comparison</h3><canvas id="queueChart" height="200"></canvas></div>
+<div class="detail-card"><h3>🔮 Surge Predictor</h3><div id="surge-pred"></div></div>
+<div class="detail-card" style="grid-column:span 2"><h3>📈 Wait Time Trend (Today)</h3><canvas id="historyChart" height="180"></canvas></div>
+<div class="detail-card" style="grid-column:span 2"><h3>🔄 Redistribution Recommendations</h3><div id="recs"></div></div>
+</div></section>
+<footer class="footer"><p>© 2026 VenueIQ.</p></footer>
+<script>
+const API=window.location.origin;let qChart,hChart;
+async function load(){try{const r=await fetch(API+'/api/v1/venues/current/queueliq');const d=await r.json();
+let h='';d.queues.forEach(q=>{const c=q.surge?'#FF4444':q.estimatedWaitMinutes>6?'#FFB800':'#22c55e';h+=`<div class="queue-row"><span style="font-weight:600">${q.name}</span><span style="font-weight:700;color:${c}">~${q.estimatedWaitMinutes} min</span><span class="${q.trend==='INCREASING'?'trend-up':q.trend==='DECREASING'?'trend-down':'trend-stable'}">${q.trend==='INCREASING'?'↑':'↓'} ${q.trend}${q.surge?' ⚠':''}</span></div>`;});
+document.getElementById('queue-dash').innerHTML=h;
+const labels=d.queues.map(q=>q.name.replace('Concourse ','')),vals=d.queues.map(q=>q.estimatedWaitMinutes),colors=d.queues.map(q=>q.surge?'#FF4444':q.estimatedWaitMinutes>6?'#FFB800':'#22c55e');
+if(qChart)qChart.destroy();
+qChart=new Chart(document.getElementById('queueChart'),{type:'bar',data:{labels,datasets:[{label:'Wait (min)',data:vals,backgroundColor:colors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8b8ba3'}},x:{grid:{display:false},ticks:{color:'#8b8ba3',font:{size:10}}}}}});
+let rh='';if(d.recommendations)d.recommendations.forEach(r=>{rh+=`<div style="padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.85rem">💡 ${r}</div>`;});
+document.getElementById('recs').innerHTML=rh||'No recommendations at this time.';
+}catch{}}
+document.getElementById('surge-pred').innerHTML=`<div style="padding:.5rem 0"><div style="font-size:.95rem;font-weight:600;color:#FFB800">⚠ Predicted spike in ~12 minutes</div><div style="font-size:.8rem;color:var(--text-secondary);margin-top:.3rem">End of over 8 — drinks break expected. Pre-position staff at North C2.</div></div><div style="padding:.5rem 0;margin-top:.8rem;border-top:1px solid var(--border)"><div style="font-size:.85rem;color:var(--text-secondary)">Next low-traffic window: After next wicket (crowd distracted ~90s)</div></div>`;
+const hLabels=['Pre-match','Gates Open','1st Inn Start','PP End','Mid Inn','Death Overs','Inn Break','2nd Inn Start','Current'];
+const hData=[1,2,4,6,5,7,12,8,5];
+hChart=new Chart(document.getElementById('historyChart'),{type:'line',data:{labels:hLabels,datasets:[{label:'Avg Wait (min)',data:hData,borderColor:'#a29bfe',backgroundColor:'rgba(162,155,254,.1)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#a29bfe'}]},options:{responsive:true,plugins:{legend:{labels:{color:'#8b8ba3'}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8b8ba3'}},x:{grid:{display:false},ticks:{color:'#8b8ba3',font:{size:9}}}}}});
+load();setInterval(load,30000);
+</script></body></html>

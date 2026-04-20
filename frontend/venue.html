@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venue Details — VenueIQ</title>
+<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="venue-extra.css">
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">⚡ VenueIQ</div>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#features">Features</a></li>
+    <li><a href="/#dashboard">Dashboard</a></li>
+  </ul>
+  <a href="/#cta" class="nav-cta">Get Early Access</a>
+</nav>
+
+<div class="venue-detail-hero">
+  <a href="/" class="back-btn">← Back to all venues</a>
+  <div class="venue-hero-content" id="venue-hero">
+    <p class="loading-text">Loading venue data...</p>
+  </div>
+</div>
+
+<div class="detail-grid" id="detail-grid" style="display:none;">
+  <div class="detail-card">
+    <h3>📍 Venue Information</h3>
+    <div id="venue-info"></div>
+  </div>
+  <div class="detail-card">
+    <h3>🏏 Sports & Capacity</h3>
+    <div id="venue-sports"></div>
+  </div>
+  <div class="detail-card zone-map-card">
+    <h3>🗺️ Zone Map <span class="sim-chip">SIMULATED · LIVE</span></h3>
+    <div id="zone-map-container"></div>
+    <div id="zone-tooltip" class="zone-tooltip" style="display:none;"></div>
+  </div>
+  <div class="detail-card">
+    <h3>📡 Live Data Status</h3>
+    <div id="venue-live-status"></div>
+  </div>
+</div>
+
+<div class="panel-row" id="panel-row" style="display:none;">
+  <div class="detail-card crowd-panel">
+    <h3>👁 CrowdSense AI <span class="sim-chip">SIMULATED · LIVE</span></h3>
+    <div id="crowdsense-panel"></div>
+  </div>
+  <div class="detail-card queue-panel">
+    <h3>⏱ QueueIQ <span class="sim-chip">SIMULATED · LIVE</span></h3>
+    <div id="queueliq-panel"></div>
+  </div>
+</div>
+
+<div class="events-section">
+  <h2>📅 Today's Matches <span id="live-badge"></span></h2>
+  <div id="events-list"><p class="loading-text">Fetching live match data...</p></div>
+</div>
+
+<div class="events-section">
+  <h2>📅 Upcoming Matches & Series</h2>
+  <div id="upcoming-list"><p class="loading-text">Loading upcoming fixtures...</p></div>
+</div>
+
+<div id="match-modal" class="match-modal" style="display:none;">
+  <div class="modal-overlay" onclick="closeMatchModal()"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="modal-back" onclick="closeMatchModal()">← Back</button>
+      <div id="modal-title"></div>
+      <div id="modal-meta"></div>
+    </div>
+    <div class="modal-tabs" id="modal-tabs"></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>© 2026 VenueIQ. Real-time sports venue intelligence.</p>
+</footer>
+
+<script src="venue-app.js"></script>
+</body>
+</html>

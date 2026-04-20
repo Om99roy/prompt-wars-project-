@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Venue Analytics — VenueIQ</title><link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../venue-extra.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head><body>
+<nav class="navbar" id="navbar"><div class="nav-logo">⚡ VenueIQ</div><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/#features">Features</a></li></ul><a href="/" class="nav-cta">← Back</a></nav>
+<section style="padding-top:6rem;max-width:1000px;margin:0 auto">
+<div class="section-header"><span class="tag">Venue Analytics</span><h2>Event Intelligence</h2><p>Comprehensive post-event insights and operational metrics.</p></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1rem;padding:0 2rem;margin-bottom:1.5rem" id="summary-cards">
+<div style="text-align:center"><p class="loading-text">Loading...</p></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:0 2rem">
+<div class="detail-card" style="grid-column:span 2"><h3>📈 Crowd Flow Timeline</h3><canvas id="flowChart" height="120"></canvas></div>
+<div class="detail-card"><h3>⏱ Queue Wait Distribution</h3><canvas id="queueDistChart" height="200"></canvas></div>
+<div class="detail-card"><h3>📋 Incident Summary</h3><div id="incident-summary" style="margin-top:1rem;display:flex;flex-direction:column;gap:1rem"></div></div>
+<div class="detail-card" style="grid-column:span 2;text-align:center">
+<button class="btn-primary" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary)" onclick="alert('Downloading simulated_match_data.csv...')">⬇ Download CSV Export</button>
+</div>
+</div></section>
+<footer class="footer"><p>© 2026 VenueIQ.</p></footer>
+<script>
+const API=window.location.origin;let fChart,qChart;
+async function load(){try{const r=await fetch(API+'/api/v1/venues/analytics/summary');const d=await r.json();
+const s=d.summary;
+document.getElementById('summary-cards').innerHTML=`
+<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;text-align:center"><div style="font-size:1.8rem;font-weight:800;color:var(--accent-glow)">${s.totalAttendance.toLocaleString()}</div><div style="font-size:.8rem;color:var(--text-secondary)">Total Attendance (${s.fillPercent}%)</div></div>
+<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;text-align:center"><div style="font-size:1.8rem;font-weight:800;color:#FF4444">${s.peakZoneFill}%</div><div style="font-size:.8rem;color:var(--text-secondary)">Peak Zone (${s.peakZone})</div></div>
+<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;text-align:center"><div style="font-size:1.8rem;font-weight:800;color:#FFB800">${s.avgQueueWait}m</div><div style="font-size:.8rem;color:var(--text-secondary)">Avg Queue Wait</div></div>
+<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;text-align:center"><div style="font-size:1.8rem;font-weight:800;color:#22c55e">${s.gateSuccessRate}%</div><div style="font-size:.8rem;color:var(--text-secondary)">Scans (${s.gatesScanned.toLocaleString()})</div></div>
+`;
+document.getElementById('incident-summary').innerHTML=`
+<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem;background:rgba(255,68,68,.1);border-radius:6px;border:1px solid rgba(255,68,68,.3)"><span style="font-weight:600;color:#FF4444">CRITICAL</span><span style="font-weight:700">${s.incidents.critical}</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem;background:rgba(255,184,0,.1);border-radius:6px;border:1px solid rgba(255,184,0,.3)"><span style="font-weight:600;color:#FFB800">HIGH</span><span style="font-weight:700">${s.incidents.high}</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem;background:rgba(108,92,231,.1);border-radius:6px;border:1px solid rgba(108,92,231,.3)"><span style="font-weight:600;color:var(--accent-glow)">MEDIUM</span><span style="font-weight:700">${s.incidents.medium}</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem;background:rgba(255,255,255,.05);border-radius:6px;border:1px solid var(--border)"><span style="font-weight:600;color:var(--text-secondary)">LOW</span><span style="font-weight:700">${s.incidents.low}</span></div>
+`;
+const tl=d.crowdTimeline;
+fChart=new Chart(document.getElementById('flowChart'),{type:'line',data:{labels:tl.map(t=>t.label),datasets:[
+{label:'North Stand',data:tl.map(t=>t.north),borderColor:'#FF4444',backgroundColor:'transparent',tension:.4},
+{label:'South Stand',data:tl.map(t=>t.south),borderColor:'#00E5C7',backgroundColor:'transparent',tension:.4},
+{label:'East Stand',data:tl.map(t=>t.east),borderColor:'#FFB800',backgroundColor:'transparent',tension:.4}
+]},options:{responsive:true,plugins:{legend:{labels:{color:'#8b8ba3'}}},scales:{y:{beginAtZero:true,max:100,grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8b8ba3',callback:v=>v+'%'}},x:{grid:{display:false},ticks:{color:'#8b8ba3',font:{size:10}}}}}});
+const q=d.queues;
+qChart=new Chart(document.getElementById('queueDistChart'),{type:'bar',data:{labels:q.map(x=>x.name.replace('Concourse ','')),datasets:[{label:'Avg Wait',data:q.map(x=>x.estimatedWaitMinutes),backgroundColor:'#6c5ce7',borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8b8ba3'}},x:{grid:{display:false},ticks:{color:'#8b8ba3',font:{size:9}}}}}});
+}catch{}}load();
+</script></body></html>

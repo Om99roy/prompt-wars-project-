@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Multi-Venue Control — VenueIQ</title><link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../venue-extra.css"></head><body>
+<nav class="navbar" id="navbar"><div class="nav-logo">⚡ VenueIQ</div><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/#features">Features</a></li></ul><a href="/" class="nav-cta">← Back</a></nav>
+<section style="padding-top:6rem;max-width:1000px;margin:0 auto">
+<div class="section-header"><span class="tag">Multi-Venue Control</span><h2>Tournament Operations</h2><p>Centralised management for distributed venue infrastructure.</p></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:0 2rem">
+<div class="detail-card" style="grid-column:span 2;display:flex;align-items:center;gap:1rem">
+<h3 style="margin:0">🏆 Tournament Selector</h3>
+<select style="padding:.5rem;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;width:250px"><option>IPL 2026</option><option>PSL 2026</option><option>ICC Women's T20 WC</option></select>
+</div>
+<div class="detail-card"><h3>🏟 Active Venues Today</h3><div id="active-venues"></div></div>
+<div class="detail-card"><h3>📅 Upcoming Matches (This Week)</h3><div id="upcoming-matches"></div></div>
+<div class="detail-card" style="grid-column:span 2"><h3>🟢 System Health</h3><div style="display:flex;gap:1.5rem;margin-top:1rem;flex-wrap:wrap">
+<div style="flex:1;background:rgba(255,255,255,.03);padding:1rem;border-radius:8px;border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem"><span style="font-weight:600">Database Cluster</span><span style="color:#55efc4;font-weight:700">● 12 ms</span></div><div style="font-size:.8rem;color:var(--text-secondary)">Neon Serverless Postgres</div></div>
+<div style="flex:1;background:rgba(255,255,255,.03);padding:1rem;border-radius:8px;border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem"><span style="font-weight:600">Event Stream</span><span style="color:#55efc4;font-weight:700">● 4 ms</span></div><div style="font-size:.8rem;color:var(--text-secondary)">Apache Kafka (Confluent Cloud)</div></div>
+<div style="flex:1;background:rgba(255,255,255,.03);padding:1rem;border-radius:8px;border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem"><span style="font-weight:600">Cache Layer</span><span style="color:#55efc4;font-weight:700">● < 1 ms</span></div><div style="font-size:.8rem;color:var(--text-secondary)">Redis Enterprise</div></div>
+</div></div>
+</div></section>
+<footer class="footer"><p>© 2026 VenueIQ.</p></footer>
+<script>
+const API=window.location.origin;
+async function load(){try{
+const r=await fetch(API+'/api/v1/venues/cricket/global');const d=await r.json();
+let act='';d.liveMatches.forEach(m=>{act+=`<div style="padding:1rem;border:1px solid var(--border);border-radius:8px;margin-bottom:.8rem;cursor:pointer;transition:all .3s" onmouseover="this.style.borderColor='var(--accent-glow)'" onmouseout="this.style.borderColor='var(--border)'" onclick="location.href='/venue.html?id=venue-1'"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">${m.venue}</span><span style="color:#ff4757;font-weight:700;font-size:.8rem">🔴 LIVE</span></div><div style="font-size:.85rem;color:var(--text-secondary);margin-top:.2rem">${m.name}</div>${m.league==='PSL 2026'?'<div style="margin-top:.5rem;font-size:.75rem;color:#FFB800">⚠ Matches behind closed doors — digital ops mode active</div>':''}</div>`;});
+document.getElementById('active-venues').innerHTML=act;
+let up='';d.upcomingMatches.slice(0,3).forEach(m=>{up+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid var(--border)"><div><div style="font-weight:600;font-size:.95rem">${m.name}</div><div style="font-size:.8rem;color:var(--text-secondary)">${m.venue}, ${m.city}</div></div><div style="text-align:right"><div style="font-weight:600;font-size:.85rem">${m.date}</div><div style="font-size:.75rem;color:var(--text-muted)">${m.league}</div></div></div>`;});
+document.getElementById('upcoming-matches').innerHTML=up;}catch{}}load();
+</script></body></html>
